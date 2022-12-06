@@ -1,6 +1,6 @@
 """
 Yolov5 Image Classification Model Inferencing Execution
-
+And generate the report using the sweetviz
 Auther: Shailesh S Sarda
 """
 
@@ -17,6 +17,7 @@ import sys
 from utils.general import increment_path
 from io import StringIO
 import pandas as pd
+import sweetviz
 
 
 FILE = Path(__file__).resolve()
@@ -83,7 +84,11 @@ def predict(imgz,name='exp'):
         print("[INFO] Image saved Successfully.")
         cols = ['Probability','Emotion_Sign']
         df = pd.read_csv(StringIO(text),  dtype=str, sep=' ',names=cols)
-        print(df.head())
+        # my_report = sweetviz.analyze(df, target_feat='Emotion_Sign')
+        my_report = sweetviz.analyze(df)
+        my_report.show_html('FinalReport.html')
+
+
 
 if __name__=="__main__":
-    predict('val_data/test.png')
+    predict('val_data/mohit.png')
