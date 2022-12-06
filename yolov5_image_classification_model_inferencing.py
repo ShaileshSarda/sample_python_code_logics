@@ -15,6 +15,9 @@ import os
 from pathlib import Path
 import sys
 from utils.general import increment_path
+from io import StringIO
+import pandas as pd
+
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[1]  # YOLOv5 root directory
@@ -56,7 +59,6 @@ def predict(imgz,name='exp'):
         prob = prob * 100
         top5i = prob.argsort(0, descending=True)[:5].tolist()
         text = '\n'.join(f'{prob[j]:.2f}% {model.names[j]}' for j in top5i)
-        print(text)
 
     save_dir = increment_path(Path('runs/predict-cls') / name, exist_ok=False)  # increment run
     (save_dir).mkdir(parents=True, exist_ok=True)  # make dir
@@ -79,7 +81,9 @@ def predict(imgz,name='exp'):
         infer_image.show()
         infer_image.save(save_path,'JPEG')
         print("[INFO] Image saved Successfully.")
-
+        cols = ['Probability','Emotion_Sign']
+        df = pd.read_csv(StringIO(text),  dtype=str, sep=' ',names=cols)
+        print(df.head())
 
 if __name__=="__main__":
-    predict('val_data/mohit.png')
+    predict('val_data/test.png')
